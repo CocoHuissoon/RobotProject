@@ -76,9 +76,9 @@ public class Draw {
 	
 		// hier moeten waardes aangepast worden om te compenseren voor het gebrek aan
 		// nauwkeurigheid vd motoren;
-		int[] correctionValues = { 72, 72, 72, 72, 72 };
+		int[] correctionValues = { 72, 72, 72, 72, 72, 72 };
 	
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 	
 			pathFinder.setRotations(pathFinder.getRotationDegreesFromLength(length));
 			pathFinder.waitComplete();
