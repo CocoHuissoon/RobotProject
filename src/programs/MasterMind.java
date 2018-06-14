@@ -46,9 +46,9 @@ public class MasterMind {
 			int randomNumber = ((int) (Math.random() * 6));
 			riddle[i] = randomToNumber[randomNumber];
 
-			 // Voor test doeleinden
-			 LCD.drawString(String.format("%s", numberToColor[riddle[i]]), 0, i);
-			 Delay.msDelay(5000); // Laat de oplossing even 5 seconde zien
+//			 // Voor test doeleinden
+//			 LCD.drawString(String.format("%s", numberToColor[riddle[i]]), 0, i);
+//			 Delay.msDelay(5000); // Laat de oplossing even 5 seconde zien
 		}
 		return riddle;
 	}
