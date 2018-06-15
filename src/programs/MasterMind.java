@@ -39,16 +39,16 @@ public class MasterMind {
 		this.BW = BW;
 	}
 
-	// Creëer een random raadsel
+	// Creï¿½er een random raadsel
 	public int[] createRiddle() {
 		int[] riddle = new int[4];
 		for (int i = 0; i < riddle.length; i++) {
 			int randomNumber = ((int) (Math.random() * 6));
 			riddle[i] = randomToNumber[randomNumber];
 
-//			 // Voor test doeleinden
-//			 LCD.drawString(String.format("%s", numberToColor[riddle[i]]), 0, i);
-//			 Delay.msDelay(5000); // Laat de oplossing even 5 seconde zien
+			// // Voor test doeleinden
+			// LCD.drawString(String.format("%s", numberToColor[riddle[i]]), 0, i);
+			// Delay.msDelay(5000); // Laat de oplossing even 5 seconde zien
 		}
 		return riddle;
 	}
