@@ -4,7 +4,6 @@ import java.io.File;
 
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
-import lejos.robotics.RegulatedMotor;
 import lejos.utility.Delay;
 import music.PlayList;
 import music.Song;

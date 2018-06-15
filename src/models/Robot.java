@@ -2,6 +2,7 @@ package models;
 
 import lejos.hardware.Button;
 import java.io.File;
+
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 import menu.TrickMenu;
@@ -22,7 +23,8 @@ public class Robot {
 	private MasterMind mastermind;
 	private Draw draw;
 	private Dragon dragon;
-
+	
+	// Constructor
 	public Robot() {
 		super();
 		this.motionController = new MotionController();
