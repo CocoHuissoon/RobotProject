@@ -10,7 +10,6 @@ import lejos.hardware.motor.*;
 import lejos.hardware.port.*;
 
 public class MotionController {
-	// Constanten
 	private float snelheid;
 	private final int rotationsToDegrees = ((360 / 61) / 2); // 1 rotatie van het wiel --> maakt een hoek van 85
 																// graden??
@@ -18,11 +17,10 @@ public class MotionController {
 	private EV3LargeRegulatedMotor mD;
 	private EV3MediumRegulatedMotor mB;
 
-	// Wiel-eigenschappen
+	// Wiel-eigenschappen om afstand (rotaties) te berekenen)
 	private final double DIAMETER = 4.2;
 	private final double CIRCUMFERENCE = DIAMETER * Math.PI;
 
-	// no args Constructor
 	public MotionController() {
 		super();
 		this.mA = new EV3LargeRegulatedMotor(MotorPort.A);

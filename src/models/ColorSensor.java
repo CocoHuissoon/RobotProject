@@ -1,12 +1,10 @@
 package models;
 
-import org.w3c.dom.css.RGBColor;
-
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
-import lejos.hardware.port.Port;
+//import lejos.hardware.port.Port;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
@@ -16,24 +14,83 @@ import lejos.utility.Delay;
 
 public class ColorSensor implements ColorDetector, ColorIdentifier {
 
-	// sensor moet altijd in S4
 	EV3ColorSensor sensor = new EV3ColorSensor(SensorPort.S4);
 	float black;
 	float white;
 	float[] sample; // Hier komt rood, groen en blauw in
 	float gray;
 
-	/**
-	 * Creëert ColorSensor object. Dit is een wrapper class (vertaalslag) voor
-	 * EV3ColorSensor.
-	 * 
-	 * @param port
-	 *            SensorPort of EV3ColorSensor device.
-	 */
 	public ColorSensor() {
-		// setRedMode();
 		super();
 		setRGBMode();
+	}
+
+	// kleurcalibratie
+	public float[] calibrateColor(String colorName) {
+		final EV3 ev3 = (EV3) BrickFinder.getLocal();
+	
+		LCD.drawString("Place me on a", 0, 1);
+		LCD.drawString(colorName.toUpperCase(), 0, 2);
+		LCD.drawString("surface.", 0, 3);
+	
+		while (Button.ENTER.isUp()) {
+			LCD.clear(4);
+			LCD.clear(5);
+			LCD.clear(6);
+			LCD.drawString("" + getRed(), 0, 4);
+			LCD.drawString("" + getGreen(), 0, 5);
+			LCD.drawString("" + getBlue(), 0, 6);
+			Delay.msDelay(500);
+		}
+		Delay.msDelay(500);
+	
+		LCD.clear();
+		LCD.drawString("Confirm", 0, 1);
+		LCD.drawString(colorName.toUpperCase(), 0, 2);
+		LCD.drawString("values?", 0, 3);
+	
+		while (Button.ENTER.isUp()) {
+			LCD.clear(4);
+			LCD.clear(5);
+			LCD.clear(6);
+			LCD.drawString("" + getRed(), 0, 4);
+			LCD.drawString("" + getGreen(), 0, 5);
+			LCD.drawString("" + getBlue(), 0, 6);
+			Delay.msDelay(500);
+		}
+		Delay.msDelay(500);
+	
+		LCD.clear();
+		return getColorRGB();
+	}
+
+	public void close() {
+		sensor.close();
+	}
+
+	public float getBlue() {
+		sensor.fetchSample(sample, 0);
+		return sample[2];
+	}
+
+	// een functie die een grijsschaal maakt van de drie kleuren
+	public float getBrightness(float RGBColor[]) {
+		// gemiddelde van de drie waardes om grijs te krijgen (max 255).
+		float grijsWaarde = (RGBColor[0] + RGBColor[1] + RGBColor[2]) / 3;
+		return grijsWaarde;
+	}
+
+	// grey = 0.5
+	public float getCurrentNormalisedBrightness() {
+		float[] currentSample = getColorRGB();
+		float currentBrightness = getBrightness(currentSample);
+		float normalisedBrightness = (currentBrightness - black) / white;
+		return normalisedBrightness;
+	}
+
+	@Override
+	public Color getColor() {
+		return null;
 	}
 
 	@Override
@@ -42,25 +99,25 @@ public class ColorSensor implements ColorDetector, ColorIdentifier {
 		return (int) sample[0];
 	}
 
-	@Override
-	public Color getColor() {
-		return null;
+	public float[] getColorRGB() {
+		sensor.fetchSample(sample, 0);
+		return sample;
 	}
 
-	/**
-	 * Set color sensor to RED light level mode.
-	 */
-	public void setRedMode() {
-		sensor.setCurrentMode("Red");
-		this.sample = new float[sensor.sampleSize()];
+	public float getGreen() {
+		sensor.fetchSample(sample, 0);
+		return sample[1];
 	}
 
-	/**
-	 * Set color sensor to RGB mode.
-	 */
-	public void setRGBMode() {
-		sensor.setCurrentMode("RGB");
-		this.sample = new float[sensor.sampleSize()];
+	public float getRed() {
+		sensor.fetchSample(sample, 0);
+		return sample[0];
+	}
+
+	// Calibreer wit en zwart
+	public void setBlackWhiteFromCalibration() {
+		this.black = getBrightness(calibrateColor("black"));
+		this.white = getBrightness(calibrateColor("white"));
 	}
 
 	public void setColorIdMode() {
@@ -76,88 +133,14 @@ public class ColorSensor implements ColorDetector, ColorIdentifier {
 		sensor.setFloodlight(color);
 	}
 
-	public float getRed() {
-		sensor.fetchSample(sample, 0);
-		return sample[0];
+	public void setRedMode() {
+		sensor.setCurrentMode("Red");
+		this.sample = new float[sensor.sampleSize()];
 	}
 
-	public float getGreen() {
-		sensor.fetchSample(sample, 0);
-		return sample[1];
-	}
-
-	public float getBlue() {
-		sensor.fetchSample(sample, 0);
-		return sample[2];
-	}
-
-	public float[] getColorRGB() {
-		sensor.fetchSample(sample, 0);
-		return sample;
-	}
-
-	// een functie die een grijsschaal maakt van de drie kleuren
-	public float getBrightness(float RGBColor[]) {
-		// gemiddelde van de drie waardes om grijs te krijgen (max 255).
-		float grijsWaarde = (RGBColor[0] + RGBColor[1] + RGBColor[2]) / 3;
-		return grijsWaarde;
-	}
-
-	// Calibreer wit en zwart
-	public void setBlackWhiteFromCalibration() {
-		this.black = getBrightness(calibrateColor("black"));
-		this.white = getBrightness(calibrateColor("white"));
-	}
-
-	// grey = 0.5
-	public float getCurrentNormalisedBrightness() {
-		float[] currentSample = getColorRGB();
-		float currentBrightness = getBrightness(currentSample);
-		float normalisedBrightness = (currentBrightness - black) / white;
-		return normalisedBrightness;
-	}
-
-	// kleurcalibratie
-	public float[] calibrateColor(String colorName) {
-		final EV3 ev3 = (EV3) BrickFinder.getLocal();
-
-		LCD.drawString("Place me on a", 0, 1);
-		LCD.drawString(colorName.toUpperCase(), 0, 2);
-		LCD.drawString("surface.", 0, 3);
-
-		while (Button.ENTER.isUp()) {
-			LCD.clear(4);
-			LCD.clear(5);
-			LCD.clear(6);
-			LCD.drawString("" + getRed(), 0, 4);
-			LCD.drawString("" + getGreen(), 0, 5);
-			LCD.drawString("" + getBlue(), 0, 6);
-			Delay.msDelay(500);
-		}
-		Delay.msDelay(500);
-
-		LCD.clear();
-		LCD.drawString("Confirm", 0, 1);
-		LCD.drawString(colorName.toUpperCase(), 0, 2);
-		LCD.drawString("values?", 0, 3);
-
-		while (Button.ENTER.isUp()) {
-			LCD.clear(4);
-			LCD.clear(5);
-			LCD.clear(6);
-			LCD.drawString("" + getRed(), 0, 4);
-			LCD.drawString("" + getGreen(), 0, 5);
-			LCD.drawString("" + getBlue(), 0, 6);
-			Delay.msDelay(500);
-		}
-		Delay.msDelay(500);
-
-		LCD.clear();
-		return getColorRGB();
-	}
-
-	public void close() {
-		sensor.close();
+	public void setRGBMode() {
+		sensor.setCurrentMode("RGB");
+		this.sample = new float[sensor.sampleSize()];
 	}
 
 }

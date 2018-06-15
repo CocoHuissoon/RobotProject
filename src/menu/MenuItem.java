@@ -25,7 +25,7 @@ public class MenuItem extends LinkedList {
 	@Override
 	public MenuItem getPrevious() {
 		return (MenuItem) (super.getPrevious());
-	
+
 	}
 
 	public String getTrickName() {
@@ -35,6 +35,7 @@ public class MenuItem extends LinkedList {
 	public String getValue() {
 		return this.get(0);
 	}
+
 	public void setTrickName(String trickName) {
 		this.trickName = trickName;
 	}

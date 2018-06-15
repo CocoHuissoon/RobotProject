@@ -40,7 +40,7 @@ public class TrickMenu {
 		firstItem.setNext(secondItem);
 		secondItem.setNext(thirdItem);
 		thirdItem.setNext(fourthItem);
-		
+
 		// wrapping list
 		firstItem.wrapList();
 
@@ -61,10 +61,10 @@ public class TrickMenu {
 	}
 
 	public void play(String value) {
-	
+
 		LCD.clear();
 		Delay.msDelay(1000);
-	
+
 		switch (value) {
 		case valueFirstTrick:
 			robot.initAndRunFollowLine();
@@ -104,18 +104,18 @@ public class TrickMenu {
 	}
 
 	public void pressUp() {
-	
+
 		currentItem = currentItem.getPrevious();
-	
+
 		runMenu();
 	}
 
 	public void runMenu() {
-	
+
 		drawMenu();
-	
+
 		int button = Button.waitForAnyPress();
-	
+
 		switch (button) {
 		case Button.ID_DOWN:
 			pressDown();
@@ -133,29 +133,3 @@ public class TrickMenu {
 		runMenu();
 	}
 }
-
-// obsolete code
-//
-// public void runVolglijn() {
-// System.out.printf("testing %s %s ", valueFirstTrick, nameFirstTrick);
-//
-//
-// }
-//
-// public void runMasterMind() {
-// System.out.printf("testing %s %s ", valueSecondTrick, nameSecondTrick);
-// }
-//
-// public void runDraw() {
-// //System.out.printf("testing %s %s ", valueThirdTrick, nameThirdTrick);
-// // robot.getDraw().drawCircle();
-// LCD.clear();
-// LCD.drawString("Bye Felicia", 0, 0);
-// Delay.msDelay(5000);
-// }
-//
-// public void runMusic() {
-// // System.out.printf("testing %s %s ", valueSecondTrick, nameSecondTrick);
-// }
-//
-// }
